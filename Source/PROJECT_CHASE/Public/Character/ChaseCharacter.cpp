@@ -12,6 +12,10 @@
 #include "PaperFlipbookComponent.h"
 #include "GameFramework/Pawn.h"
 #include "PaperCharacter.h"
+#include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Character/ChaseHUD.h"
+#include "Kismet/GameplayStatics.h"
 
 AChaseCharacter::AChaseCharacter()
 {
@@ -20,8 +24,14 @@ AChaseCharacter::AChaseCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 
+	BoxColl = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxColl"));
+	BoxColl->SetupAttachment(GetRootComponent());
+
 	Camera->SetupAttachment(SpringArm);
-	SpringArm->SetupAttachment(GetRootComponent());
+	SpringArm->SetupAttachment(RootComponent);
+
+	MinJumpValue = 3.0f;
+	MaxJumpValue = 10.0f;
 }
 
 void AChaseCharacter::BeginPlay()
@@ -31,11 +41,18 @@ void AChaseCharacter::BeginPlay()
 	SetMappingContext(DefaultMappingContext);
 	ActualMappingContext = EActualMappingContext::DEFAULT_CONTEXT;
 
+	if (UCapsuleComponent* Capsule = Cast<UCapsuleComponent>(GetRootComponent()))
+	{
+		Capsule->SetSimulatePhysics(false);
+	}
+
+	SetupHUD();
+
 	bCanJump = true;
 	bIsCastingJump = false;
 
-	MinJumpValue = 3.0f;
-	MaxJumpValue = 10.0f;
+	
+	JumpDir = 0.0f;
 }
 
 void AChaseCharacter::Tick(float DeltaTime)
@@ -43,6 +60,8 @@ void AChaseCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	SetSpriteRotation();
+
+	
 }
 
 void AChaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -55,6 +74,8 @@ void AChaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		Input->BindAction(SwitchMappingAction, ETriggerEvent::Started, this, &AChaseCharacter::SwitchMappingContext);
 		Input->BindAction(JumpLeftAction, ETriggerEvent::Triggered, this, &AChaseCharacter::CastJump);
 		Input->BindAction(JumpRightAction, ETriggerEvent::Triggered, this, &AChaseCharacter::CastJump);
+		Input->BindAction(JumpLeftAction, ETriggerEvent::Completed, this, &AChaseCharacter::JumpOnRelease);
+		Input->BindAction(JumpRightAction, ETriggerEvent::Completed, this, &AChaseCharacter::JumpOnRelease);
 	}
 }
 
@@ -88,10 +109,20 @@ void AChaseCharacter::SetSpriteRotation()
 	}
 }
 
+void AChaseCharacter::SetupHUD()
+{
+	if (IsLocallyControlled() && ChaseHUDClass)
+	{
+		ChaseHUD = CreateWidget<UChaseHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0), ChaseHUDClass, "CHASE_HUD");
+		ChaseHUD->AddToViewport();
+		ChaseHUD->OnBeginPlay();
+	}
+}
+
 void AChaseCharacter::Move(const FInputActionValue& ActionValue)
 {
 	float Value = ActionValue.Get<float>();
-
+	
 	AddMovementInput(FVector(Value, 0.0f, 0.0f));
 }
 
@@ -111,20 +142,35 @@ void AChaseCharacter::SwitchMappingContext()
 		break;
 	}
 
-	//Update UI
+	ChaseHUD->SetActualContextImage(ActualMappingContext);
 }
 
 void AChaseCharacter::CastJump(const FInputActionValue& ActionValue)
 {
-	const float Value = ActionValue.Get<float>();
-
 	bIsCastingJump = true;
-	JumpValue += 0.1f;
+
+	JumpValue += TickJumpMultiplayer;
+
+	float Value = ActionValue.Get<float>();
+
+	JumpDir = Value;
 
 	if (JumpValue >= MaxJumpValue) 
 	{
 		JumpValue = MaxJumpValue;
 	}
+
+	if (JumpValue <= MinJumpValue)
+	{
+		JumpValue = MinJumpValue;
+	}
+}
+
+void AChaseCharacter::JumpOnRelease(const FInputActionValue& ActionValue)
+{	
+	JumpInDirection(JumpDir, JumpValue);
+	JumpDir = 0.0f;
+	JumpValue = 0.0f;
 }
 
 void AChaseCharacter::JumpInDirection(float Direction, float Strength)

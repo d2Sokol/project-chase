@@ -11,6 +11,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class UInputMappingContext;
 class UInputAction;
+class UBoxComponent;
+class UChaseHUD;
 
 UENUM(BlueprintType)
 enum EActualMappingContext {
@@ -39,18 +41,34 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Components")
+		UBoxComponent* BoxColl;
+
+	UPROPERTY(EditAnywhere, Category = "Components")
 		UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, Category = "Components")
 		USpringArmComponent* SpringArm;
 
+	UPROPERTY(EditAnywhere, Category = "Subclass")
+		TSubclassOf<UChaseHUD> ChaseHUDClass;
+
 	EActualMappingContext ActualMappingContext;
+
+	UChaseHUD* ChaseHUD;
 
 	bool bCanJump;
 
-	float MinJumpValue = 0.0f;
-	float MaxJumpValue = 0.0f;
+	UPROPERTY(EditAnywhere, Category="Jumping Data")
+		float MinJumpValue = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Jumping Data")
+		float MaxJumpValue = 0.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Jumping Data", Meta = (ClampMin = 0.1, ClampMax = 1.0f))
+		float TickJumpMultiplayer = 0.0f;
+
 	float JumpValue = 0.0f;
+	float JumpDir = 0.0f;
 
 	bool bIsCastingJump;
 
@@ -78,6 +96,8 @@ private:
 
 	void SetSpriteRotation();
 
+	void SetupHUD();
+
 protected:
 
 	void Move(const FInputActionValue& ActionValue);
@@ -85,5 +105,6 @@ protected:
 	void SwitchMappingContext();
 
 	void CastJump(const FInputActionValue& ActionValue);
+	void JumpOnRelease(const FInputActionValue& ActionValue);
 	void JumpInDirection(float Direction, float Strength);
 };
