@@ -15,7 +15,7 @@ UChaseHUD::UChaseHUD(const FObjectInitializer& ObjectInitializer)
 	SetRenderOpacity(0.0f);
 }
 
-void UChaseHUD::ShowHUD(bool bNewShow)
+void UChaseHUD::SetShowHUD(bool bNewShow)
 {
 	if (bNewShow)
 	{
@@ -57,7 +57,7 @@ void UChaseHUD::OnBeginPlay()
 {
 	MappingContextThumbnail = GetWidgetReference<UImage>("MappingContextThumbnail");
 	SetActualContextImage(EActualMappingContext::DEFAULT_CONTEXT);
-	ShowHUD(true);
+	SetShowHUD(true);
 }
 
 UWidgetAnimation* UChaseHUD::GetWidgetAnimation(FString AnimationName) const

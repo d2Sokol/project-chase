@@ -22,7 +22,7 @@ class UChaseHUD : public UUserWidget
 public:
 	UChaseHUD(const FObjectInitializer& ObjectInitializer);
 	
-	void ShowHUD(bool bNewShow);
+	void SetShowHUD(bool bNewShow);
 
 	void PlayHUDAnimation(FString AnimationName);
 

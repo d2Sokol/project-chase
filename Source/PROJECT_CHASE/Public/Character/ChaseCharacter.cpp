@@ -142,6 +142,7 @@ void AChaseCharacter::SwitchMappingContext()
 		break;
 	}
 
+	JumpValue = 0.0f;
 	ChaseHUD->SetActualContextImage(ActualMappingContext);
 }
 
