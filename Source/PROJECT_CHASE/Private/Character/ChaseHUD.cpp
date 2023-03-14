@@ -58,6 +58,29 @@ void UChaseHUD::OnBeginPlay()
 	MappingContextThumbnail = GetWidgetReference<UImage>("MappingContextThumbnail");
 	SetActualContextImage(EActualMappingContext::DEFAULT_CONTEXT);
 	SetShowHUD(true);
+	SetShowTutorial(true);
+}
+
+void UChaseHUD::SetShowTutorial(bool bNewShow)
+{
+	if (bNewShow)
+	{
+		PlayHUDAnimation("FadeInTutorial_INST");
+		if (APlayerController* PC = Cast<APlayerController>(GetWorld()->GetFirstPlayerController()))
+		{
+			PC->SetInputMode(FInputModeGameAndUI());
+			PC->SetShowMouseCursor(true);
+		}
+	}
+	else
+	{
+		if (APlayerController* PC = Cast<APlayerController>(GetWorld()->GetFirstPlayerController()))
+		{
+			PC->SetInputMode(FInputModeGameOnly());
+			PC->SetShowMouseCursor(false);
+		}
+		PlayHUDAnimation("FadeOutTutorial_INST");
+	}
 }
 
 UWidgetAnimation* UChaseHUD::GetWidgetAnimation(FString AnimationName) const

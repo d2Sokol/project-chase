@@ -30,6 +30,9 @@ public:
 
 	void OnBeginPlay();
 
+	UFUNCTION(BlueprintCallable)
+		void SetShowTutorial(bool bNewShow);
+
 private:
 	UWidgetAnimation* GetWidgetAnimation(FString AnimationName) const;
 

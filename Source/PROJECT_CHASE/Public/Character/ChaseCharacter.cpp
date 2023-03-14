@@ -188,3 +188,8 @@ void AChaseCharacter::JumpInDirection(float Direction, float Strength)
 		//bCanJump = false;
 	}
 }
+
+UChaseHUD* AChaseCharacter::GetCharacterHUD()
+{
+	return ChaseHUD;
+}

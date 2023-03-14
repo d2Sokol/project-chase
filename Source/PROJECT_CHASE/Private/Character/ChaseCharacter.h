@@ -112,4 +112,8 @@ protected:
 	void CastJump(const FInputActionValue& ActionValue);
 	void JumpOnRelease(const FInputActionValue& ActionValue);
 	void JumpInDirection(float Direction, float Strength);
+
+public:
+	UFUNCTION(BlueprintCallable)
+		UChaseHUD* GetCharacterHUD();
 };
