@@ -16,6 +16,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Character/ChaseHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "Character/Components/InteractComponent.h"
 
 AChaseCharacter::AChaseCharacter()
 {
@@ -23,15 +24,18 @@ AChaseCharacter::AChaseCharacter()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
 
 	BoxColl = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxColl"));
 	BoxColl->SetupAttachment(GetRootComponent());
 
 	Camera->SetupAttachment(SpringArm);
 	SpringArm->SetupAttachment(RootComponent);
+	InteractComponent->GetInteractBox()->SetupAttachment(GetRootComponent());
 
 	MinJumpValue = 3.0f;
 	MaxJumpValue = 10.0f;
+	TickJumpMultiplayer = 0.2f;
 }
 
 void AChaseCharacter::BeginPlay()

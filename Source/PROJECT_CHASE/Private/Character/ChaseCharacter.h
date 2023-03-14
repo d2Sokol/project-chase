@@ -13,6 +13,7 @@ class UInputMappingContext;
 class UInputAction;
 class UBoxComponent;
 class UChaseHUD;
+class UInteractComponent;
 
 UENUM(BlueprintType)
 enum EActualMappingContext {
@@ -49,12 +50,16 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Components")
 		USpringArmComponent* SpringArm;
 
+	UPROPERTY(EditAnywhere, Category = "Components")
+		UInteractComponent* InteractComponent;
+
 	UPROPERTY(EditAnywhere, Category = "Subclass")
 		TSubclassOf<UChaseHUD> ChaseHUDClass;
 
 	EActualMappingContext ActualMappingContext;
 
 	UChaseHUD* ChaseHUD;
+
 
 	bool bCanJump;
 
