@@ -184,7 +184,7 @@ void AChaseCharacter::JumpInDirection(float Direction, float Strength)
 	{
 		//200.0f //700.0f
 		
-		LaunchCharacter(FVector(Direction * 200.0f, 0.0f, Strength*70.0f), false, false);
+		LaunchCharacter(FVector(Direction * 500.0f, 0.0f, Strength*70.0f), false, false);
 		//bCanJump = false;
 	}
 }
