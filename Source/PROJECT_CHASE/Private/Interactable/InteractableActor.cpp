@@ -4,6 +4,7 @@
 #include "Interactable/InteractableActor.h"
 #include "Components/BoxComponent.h"
 #include "Character/ChaseCharacter.h"
+#include "Character/ChaseHUD.h"
 
 AInteractableActor::AInteractableActor()
 {
@@ -37,6 +38,14 @@ void AInteractableActor::OnStartInteraction()
 		if (AChaseCharacter* Character = Cast<AChaseCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn()))
 		{
 			Character->SetActorLocation(LocationToSet);
+		}
+	}
+	else if (InteractionType == EInteractionType::CollectableActor)
+	{
+		if (AChaseCharacter* Character = Cast<AChaseCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn()))
+		{
+			Character->AddStar();
+			Destroy();
 		}
 	}
 }

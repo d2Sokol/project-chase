@@ -8,6 +8,7 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
 
 UChaseHUD::UChaseHUD(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -80,6 +81,14 @@ void UChaseHUD::SetShowTutorial(bool bNewShow)
 			PC->SetShowMouseCursor(false);
 		}
 		PlayHUDAnimation("FadeOutTutorial_INST");
+	}
+}
+
+void UChaseHUD::SetStarAmount(uint8 StarAmount)
+{
+	if (UTextBlock* StarAmountText = GetWidgetReference<UTextBlock>("StarAmount"))
+	{
+		StarAmountText->SetText(FText::AsNumber(StarAmount));
 	}
 }
 

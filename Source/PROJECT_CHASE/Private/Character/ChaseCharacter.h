@@ -77,6 +77,8 @@ private:
 
 	bool bIsCastingJump;
 
+	uint8 StarAmount;
+
 protected: // Input
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 		UInputMappingContext* DefaultMappingContext;
@@ -116,4 +118,8 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable)
 		UChaseHUD* GetCharacterHUD();
+
+	void AddStar();
+
+	uint8 GetStarAmount() const;
 };

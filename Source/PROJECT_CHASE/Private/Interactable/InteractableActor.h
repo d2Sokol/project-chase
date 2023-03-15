@@ -12,7 +12,8 @@ class UBoxComponent;
 UENUM()
 enum EInteractionType
 {
-	PositionTrigger = 0 UMETA(DisplayName="SetPlayerPosition")
+	PositionTrigger = 0 UMETA(DisplayName="SetPlayerPosition"),
+	CollectableActor UMETA(DisplayName="CollectableStar")
 };
 
 UCLASS()

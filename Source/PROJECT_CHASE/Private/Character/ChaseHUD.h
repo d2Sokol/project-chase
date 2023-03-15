@@ -33,6 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetShowTutorial(bool bNewShow);
 
+	void SetStarAmount(uint8 StarAmount);
+
 private:
 	UWidgetAnimation* GetWidgetAnimation(FString AnimationName) const;
 

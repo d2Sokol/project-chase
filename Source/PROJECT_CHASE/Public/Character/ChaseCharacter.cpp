@@ -36,6 +36,7 @@ AChaseCharacter::AChaseCharacter()
 	MinJumpValue = 3.0f;
 	MaxJumpValue = 10.0f;
 	TickJumpMultiplayer = 0.2f;
+	StarAmount = 0;
 }
 
 void AChaseCharacter::BeginPlay()
@@ -192,4 +193,15 @@ void AChaseCharacter::JumpInDirection(float Direction, float Strength)
 UChaseHUD* AChaseCharacter::GetCharacterHUD()
 {
 	return ChaseHUD;
+}
+
+void AChaseCharacter::AddStar()
+{
+	StarAmount++;
+	ChaseHUD->SetStarAmount(StarAmount);
+}
+
+uint8 AChaseCharacter::GetStarAmount() const
+{
+	return StarAmount;
 }
