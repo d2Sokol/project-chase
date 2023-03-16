@@ -14,6 +14,7 @@ class UInputAction;
 class UBoxComponent;
 class UChaseHUD;
 class UInteractComponent;
+class USpellsCompoenent;
 
 UENUM(BlueprintType)
 enum EActualMappingContext {
@@ -55,6 +56,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Subclass")
 		TSubclassOf<UChaseHUD> ChaseHUDClass;
+
+	UPROPERTY(EditAnywhere, Category = "Components")
+		USpellsCompoenent* SpellsComponent;
 
 	EActualMappingContext ActualMappingContext;
 
@@ -98,6 +102,12 @@ protected: // Input
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 		UInputAction* JumpRightAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+		UInputAction* SavePositionSpellAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+		UInputAction* LoadPositionSpellAction;
+
 private:
 	void SetMappingContext(UInputMappingContext* MappingContext);
 
@@ -115,11 +125,16 @@ protected:
 	void JumpOnRelease(const FInputActionValue& ActionValue);
 	void JumpInDirection(float Direction, float Strength);
 
+	void SavePositionSpell();
+	void LoadPositionSpell();
+
 public:
 	UFUNCTION(BlueprintCallable)
 		UChaseHUD* GetCharacterHUD();
 
 	void AddStar();
+
+	void RemoveStars(uint8 RemoveStarsCount);
 
 	uint8 GetStarAmount() const;
 };

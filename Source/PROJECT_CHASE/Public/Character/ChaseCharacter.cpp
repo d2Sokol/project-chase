@@ -17,6 +17,7 @@
 #include "Character/ChaseHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Character/Components/InteractComponent.h"
+#include "Character/Components/SpellsCompoenent.h"
 
 AChaseCharacter::AChaseCharacter()
 {
@@ -25,6 +26,7 @@ AChaseCharacter::AChaseCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
+	SpellsComponent = CreateDefaultSubobject<USpellsCompoenent>(TEXT("Spells Component"));
 
 	BoxColl = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxColl"));
 	BoxColl->SetupAttachment(GetRootComponent());
@@ -76,11 +78,13 @@ void AChaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	if (UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AChaseCharacter::Move);
-		Input->BindAction(SwitchMappingAction, ETriggerEvent::Started, this, &AChaseCharacter::SwitchMappingContext);
+		Input->BindAction(SwitchMappingAction, ETriggerEvent::Triggered, this, &AChaseCharacter::SwitchMappingContext);
 		Input->BindAction(JumpLeftAction, ETriggerEvent::Triggered, this, &AChaseCharacter::CastJump);
 		Input->BindAction(JumpRightAction, ETriggerEvent::Triggered, this, &AChaseCharacter::CastJump);
 		Input->BindAction(JumpLeftAction, ETriggerEvent::Completed, this, &AChaseCharacter::JumpOnRelease);
 		Input->BindAction(JumpRightAction, ETriggerEvent::Completed, this, &AChaseCharacter::JumpOnRelease);
+		Input->BindAction(SavePositionSpellAction, ETriggerEvent::Completed, this, &AChaseCharacter::SavePositionSpell);
+		Input->BindAction(LoadPositionSpellAction, ETriggerEvent::Completed, this, &AChaseCharacter::LoadPositionSpell);
 	}
 }
 
@@ -190,6 +194,16 @@ void AChaseCharacter::JumpInDirection(float Direction, float Strength)
 	}
 }
 
+void AChaseCharacter::SavePositionSpell()
+{
+	SpellsComponent->SavePosition(GetActorLocation());
+}
+
+void AChaseCharacter::LoadPositionSpell()
+{
+	SpellsComponent->SpellSetPlayerPosition();
+}
+
 UChaseHUD* AChaseCharacter::GetCharacterHUD()
 {
 	return ChaseHUD;
@@ -198,6 +212,13 @@ UChaseHUD* AChaseCharacter::GetCharacterHUD()
 void AChaseCharacter::AddStar()
 {
 	StarAmount++;
+	ChaseHUD->SetStarAmount(StarAmount);
+}
+
+void AChaseCharacter::RemoveStars(uint8 RemoveStarsCount)
+{
+	StarAmount = StarAmount-RemoveStarsCount;
+	UE_LOG(LogTemp, Warning, TEXT("%d"), StarAmount);
 	ChaseHUD->SetStarAmount(StarAmount);
 }
 

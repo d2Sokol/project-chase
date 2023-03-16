@@ -90,6 +90,40 @@ void UChaseHUD::SetStarAmount(uint8 StarAmount)
 	{
 		StarAmountText->SetText(FText::AsNumber(StarAmount));
 	}
+
+	if (UTextBlock* StarSpellText = GetWidgetReference<UTextBlock>("StarNeeded"))
+	{
+		if (5 - StarAmount <= 0)
+		{
+			StarSpellText->SetText(FText::AsNumber(0));
+			StarSpellText->SetOpacity(0.0f);
+		}
+		else 
+		{
+			StarSpellText->SetText(FText::AsNumber(5 - StarAmount));
+		}
+	}
+}
+
+void UChaseHUD::SavePositionSpell()
+{
+	if (UImage* SpellImage = GetWidgetReference<UImage>("SetPositionSpellThumbnail"))
+	{
+		SpellImage->SetOpacity(1.0f);
+	}
+}
+
+void UChaseHUD::SetPlayerPositionSpell()
+{
+	if (UImage* SpellImage = GetWidgetReference<UImage>("SetPositionSpellThumbnail"))
+	{
+		SpellImage->SetOpacity(0.3f);
+	}
+
+	if (UTextBlock* StarSpellText = GetWidgetReference<UTextBlock>("StarNeeded"))
+	{
+		StarSpellText->SetOpacity(0.4f);
+	}
 }
 
 UWidgetAnimation* UChaseHUD::GetWidgetAnimation(FString AnimationName) const

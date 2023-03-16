@@ -34,6 +34,10 @@ public:
 		void SetShowTutorial(bool bNewShow);
 
 	void SetStarAmount(uint8 StarAmount);
+	
+	void SavePositionSpell();
+
+	void SetPlayerPositionSpell();
 
 private:
 	UWidgetAnimation* GetWidgetAnimation(FString AnimationName) const;
